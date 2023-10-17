@@ -1,0 +1,23 @@
+{
+  "name": "1dv610-l3",
+  "version": "1.0.0",
+  "description": "Laboration 3 1dv610",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/no222hj/1dv610-L3.git"
+  },
+  "author": "Nathanael Olsson",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/no222hj/1dv610-L3/issues"
+  },
+  "homepage": "https://github.com/no222hj/1dv610-L3#readme",
+  "dependencies": {
+    "node": "^20.7.0"
+  }
+}
