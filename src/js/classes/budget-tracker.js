@@ -11,27 +11,32 @@ export class BudgetTracker {
             {
                 category: "Food",
                 amount: 200,
-                color: "#ff0000"
+                color: "#ff0000",
+                id: 0
             },
             {
                 category: "Rent",
                 amount: 300,
-                color: "#00ff00"
+                color: "#00ff00",
+                id: 1
             },
             {
                 category: "Transportation",
                 amount: 100,
-                color: "#0000ff"
+                color: "#0000ff",
+                id: 2
             },
             {
                 category: "Entertainment",
                 amount: 100,
-                color: "#ffff00"
+                color: "#ffff00",
+                id: 3
             },
             {
                 category: "Other",
                 amount: 100,
-                color: "#00ffff"
+                color: "#00ffff",
+                id: 4
             }
         ]
 
@@ -74,7 +79,7 @@ export class BudgetTracker {
         const expenseContainer = document.getElementById('expenseList')
         this.expenseList.forEach(element => {
             const tableRow = document.createElement('tr')
-            tableRow.setAttribute('id', `expense-item-${element.category}`)
+            tableRow.setAttribute('id', `expense-item-${element.id}`)
             tableRow.style.backgroundColor = element.color
             const tableDataCategory = document.createElement('td')
             tableDataCategory.textContent = element.category
@@ -94,13 +99,24 @@ export class BudgetTracker {
             tableRow.appendChild(TableDataDelete)
             expenseContainer.appendChild(tableRow)
         })
+
+        const addCategoryExpenseButton = document.getElementById('addCategoryExpenseButton')
+        addCategoryExpenseButton.addEventListener('click', () => {
+            document.getElementById('categoryExpenseField').classList.remove('d-none')
+        })
+
+        const addExpenseButton = document.getElementById('addExpenseButton')
+        addExpenseButton.addEventListener('click', () => {
+            this.addExpense()
+        })
     }
 
     deleteExpense(expense) {
-        const expenseItem = document.getElementById(`expense-item-${expense.category}`)
+        delete this.expenseList[expense.id]
+        const expenseItem = document.getElementById(`expense-item-${expense.id}`)
         expenseItem.remove()
 
-
+        console.log(this.expenseList)
     }
 
 

@@ -100,10 +100,12 @@
                 </ul>
             </div>
         </div>
-        <div class="col-sm-6">
+
         <div class="card text-center">
             <div class ="card-header">
                 <h2>Expenses</h2>
+            </div>
+            <div class="card-body">
                 <table class="table text-center">
                     <thead>
                         <tr>
@@ -113,26 +115,22 @@
                         </tr>
                     </thead>
                     <tbody id="expenseList">
-                        <tr>
-                            <td>Food</td>
-                            <td>500</td>
-                            <td><button class="btn btn-danger btn-sm me2 delete">delete</button></td>
-                        </tr>
                     </tbody>
                 </table>
                 </ul>
+                <button class="btn btn-outline-success me2" type="button" data-bs-toggle="modal" data-bs-target="#addExpenseModal">
+                    Add expense
+                </button>
             </div>
-            <div>
+        </div>
 
-        </div>
-        </div>
 
     </div>
     <div id="summary-container">
         <div class="card" id="edit-container">
 lskjdlfjk
         </div>
-        <div class="card" id="pieChartExpenseVersusBudget">
+        <div class="card" id="pieChartExpenseVersusBudget"> 
 dflksdjf
         </div>
     </div>
@@ -151,28 +149,29 @@ dflksdjf
                     <input class="form-control" id="amount" type="text">
                 </div>
                 <div class="mb-3">
-                    <select class="form-select" name="dropdown" id="dropdownforexpense">
+                    <label class="form-label" for="expenseCategories">Category:</label>
+                    <select class="form-select" name="dropdown" id="expenseCategories">
                         <div>
                         <option disabled selected value> - select category - </option>
                         <option value="1">Food</option>
                         <option value="2">Transportation</option>
                         <option value="3">Accomodation</option>
-                        <option value="4">Other</option>
+                        <option value="4">Other</option> 
                         </div>
                         <div>
                         <option disabled> <hr> </option>
                         </div>
                     </select>
-                    <button id="add-category-expense" class="btn btn-sm btn-outline-success me2" type="button">
+                    <button id="addCategoryeEpense" class="btn btn-sm btn-outline-success me2" type="button">
                         Add category
                     </button>
-                    <input type="text" class="d-none">
+                    <input id="categoryExpenseField" type="text">
                 </div>
               </form>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Save changes</button>
+              <button id="addExpenseButton" type="button" class="btn btn-primary">Save changes</button>
             </div>
           </div>
         </div>
