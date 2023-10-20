@@ -58,7 +58,7 @@
                     </tbody>
                 </table>
                 </ul>
-                <button class="btn btn-outline-success me2" type="button" data-bs-toggle="modal" data-bs-target="#addExpenseModal">
+                <button  id="addExpenseModalButton" class="btn btn-outline-success me2" type="button">
                     Add expense
                 </button>
             </div>
@@ -75,7 +75,7 @@ dflksdjf
         </div>
     </div>
 
-    <div class="modal fade" id="addExpenseModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="addExpenseModal" tabindex="-1">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
@@ -96,7 +96,7 @@ dflksdjf
                         Add category
                     </button>
                 </div>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button id="closeExpenseModalButton" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
               <button id="addExpenseButton" type="submit" class="btn btn-primary">Add</button>
               </form>
             </div>

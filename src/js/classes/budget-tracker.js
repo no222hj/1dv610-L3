@@ -56,14 +56,19 @@ export class BudgetTracker {
 
     setUpExpense() {
 
+        const addExpenseModalButton = document.getElementById('addExpenseModalButton')
+        this.setUpExpenseModal()
+        addExpenseModalButton.addEventListener('click', (event) => {
+        const expenseModal = new bootstrap.Modal(document.getElementById('addExpenseModal'))
+        expenseModal.show()
+        })
+
         for (const key in this.expenseList) {
             if (Object.hasOwnProperty.call(this.expenseList, key)) {
                 const object = this.expenseList[key];
                 this.createExpenseListing(object)
             }
         }
-
-        this.setUpExpenseModal()
     }
 
     createExpenseListing(expense) {
@@ -81,7 +86,6 @@ export class BudgetTracker {
             deleteButton.classList.add('btn', 'btn-danger', 'btn-sm', 'me2')
             deleteButton.addEventListener('click', () => {
                 this.deleteExpense(expense.category)
-                console.log('delete expense')
             }, { once: true}
             )
             TableDataDelete.appendChild(deleteButton)
@@ -92,6 +96,12 @@ export class BudgetTracker {
     }
 
     setUpExpenseModal() {
+        const expenseModal = document.getElementById('addExpenseModal')
+        expenseModal.addEventListener('hidden.bs.modal', () => {
+            const form = document.getElementById('addExpenseForm')
+            form.reset()
+        })
+
         const addCategoryExpenseButton = document.getElementById('expenseModalAddCategoryButton')
         addCategoryExpenseButton.addEventListener('click', () => {
             document.getElementById('categoryExpenseField').classList.remove('d-none')
@@ -100,8 +110,11 @@ export class BudgetTracker {
         const addExpenseButton = document.getElementById('addExpenseForm')
         addExpenseButton.addEventListener('submit', (event) => {
             event.preventDefault()
-            this.addExpense()
-            console.log('add expense')
+            const amount = document.getElementById('expenseModalAmountInput').value
+            const category = document.getElementById('expenseModalCategoryInput').value
+            console.log(expenseModal)
+            expenseModal.hide()
+            this.addExpense(amount, category)
         }, { once: true})
     }
 
@@ -113,10 +126,7 @@ export class BudgetTracker {
         expenseItem.remove()
     }
 
-    addExpense() {
-        const expenseModalForm = document.getElementById('addExpenseForm')
-        const amount = document.getElementById('expenseModalAmountInput').value
-        const category = document.getElementById('expenseModalCategoryInput').value
+    addExpense(amount, category) {
 
         console.log(typeof amount)
         if (category in this.expenseList) {
