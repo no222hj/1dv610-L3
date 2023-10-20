@@ -21,58 +21,6 @@
             </form>
         </div>
     </nav>
-    <div class="card text-center">
-        <div class="card-header">
-          <ul class="nav nav-tabs card-header-tabs">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="true" href="#">Budget</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Expenses</a>
-            </li>
-          </ul>
-        </div>
-        <div class="card-body">
-        <div id="budgetTab">
-          <h4 class="card-title">Budget</h4>
-          <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">Category</th>
-                    <th scope="col">Amount</th>
-                    <th scope="col">Action</th>
-                </tr>
-            </thead>
-            <tbody id="incomeList">
-                <tr>
-                    <td>Salary</td>
-                    <td>5000</td>
-                    <td><button class="btn btn-danger btn-sm me2">delete</button></td>
-                </tr>
-            </tbody>
-        </table>
-        </div>
-        <div id="expensesTab">
-            <h4 class="card-title">Expenses</h4>
-            <table class="table">
-              <thead>
-                  <tr>
-                      <th scope="col">Category</th>
-                      <th scope="col">Amount</th>
-                      <th scope="col">Action</th>
-                  </tr>
-              </thead>
-              <tbody id="incomeList">
-                  <tr>
-                      <td>Salary</td>
-                      <td>5000</td>
-                      <td><button class="btn btn-danger btn-sm me2">delete</button></td>
-                  </tr>
-              </tbody>
-          </table>
-          </div>
-        </div>
-      </div>
     <div id="info-container" class="row">
         <div class="col-sm-6 mb-3 mb-sm-0 ">
         <div class="card text-center">
@@ -87,14 +35,6 @@
                         </tr>
                     </thead>
                     <tbody id="incomeList">
-                        <tr>
-                            <td>Salary</td>
-                            <td>5000</td>
-                            <td><button class="btn btn-danger btn-sm me2">delete</button></td>
-                        </tr>
-                        <tr>
-                            <td>Total</td>
-                            <td>1000</td>
                     </tbody>
                 </table>
                 </ul>
@@ -143,24 +83,25 @@ dflksdjf
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <form class="justify-content-">
+              <form id="addExpenseForm" class="justify-content-">
                 <div class="mb-3">
-                    <label class="form-label" for="amount">Amount:</label>
-                    <input class="form-control" id="amount" type="text">
+                    <label class="form-label" for="expenseModalAmountInput" minlength="1">Amount:</label>
+                    <input class="form-control" id="expenseModalAmountInput" type="text" required>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label" for="categoryExpenseField">Category:</label>
-                    <input type="text" class="form-control" id="categoryExpenseField">
+                    <label class="form-label" for="expenseModalCategoryInput">Category:</label>
+                    <input type="text" class="form-control" id="expenseModalCategoryInput" required>
                     <ul></ul>
-                    <button id="addCategoryeEpense" class="btn btn-sm btn-outline-success me2" type="button">
+                    <button id="expenseModalAddCategoryButton" class="btn btn-sm btn-outline-success me2" type="button">
                         Add category
                     </button>
                 </div>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button id="addExpenseButton" type="submit" class="btn btn-primary">Add</button>
               </form>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button id="addExpenseButton" type="button" class="btn btn-primary">Save changes</button>
+
             </div>
           </div>
         </div>

@@ -35,7 +35,6 @@ export class BudgetTracker {
         //this.budgetData = this.#setBudgetData()
         this.generateSummaryCharts()
         this.setUpExpense()
-
     }
 
     #setUpCategories() {
@@ -63,6 +62,8 @@ export class BudgetTracker {
                 this.createExpenseListing(object)
             }
         }
+
+        this.setUpExpenseModal()
     }
 
     createExpenseListing(expense) {
@@ -88,7 +89,9 @@ export class BudgetTracker {
             tableRow.appendChild(tableDataAmount)
             tableRow.appendChild(TableDataDelete)
             expenseContainer.appendChild(tableRow)
+    }
 
+    setUpExpenseModal() {
         const addCategoryExpenseButton = document.getElementById('expenseModalAddCategoryButton')
         addCategoryExpenseButton.addEventListener('click', () => {
             document.getElementById('categoryExpenseField').classList.remove('d-none')
@@ -108,8 +111,6 @@ export class BudgetTracker {
 
         const expenseItem = document.getElementById(`expense-item-${expense}`)
         expenseItem.remove()
-
-        console.log(this.expenseList)
     }
 
     addExpense() {

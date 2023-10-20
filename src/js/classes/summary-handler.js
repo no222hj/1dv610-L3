@@ -31,17 +31,23 @@ export class SummaryHandler {
 
     #getTotalBudget() {
         let totalBudget = 0
-        this.budgetList.forEach(element => {
-            totalBudget += element.amount
-        })
+        for (const key in this.budgetList) {
+            if (Object.hasOwnProperty.call(this.budgetList, key)) {
+                const element = this.budgetList[key];
+                totalBudget += element.amount
+            }
+        }
         return totalBudget
     }
 
     #getTotalExpense() {
         let totalExpense = 0
-        this.expenseList.forEach(element => {
-            totalExpense += element.amount
-        })
+        for (const key in this.expenseList) {
+            if (Object.hasOwnProperty.call(this.expenseList, key)) {
+                const element = this.expenseList[key];
+                totalExpense += element.amount
+            }
+        }
         return totalExpense
     }
 
