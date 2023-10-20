@@ -7,51 +7,31 @@ export class BudgetTracker {
 
     constructor (budgetData) {
 
-        this.expenseList = [
-            {
-                category: "Food",
-                amount: 200,
-                color: "#ff0000",
-                id: 0
-            },
-            {
-                category: "Rent",
-                amount: 300,
-                color: "#00ff00",
-                id: 1
-            },
-            {
-                category: "Transportation",
-                amount: 100,
-                color: "#0000ff",
-                id: 2
-            },
-            {
-                category: "Entertainment",
-                amount: 100,
-                color: "#ffff00",
-                id: 3
-            },
-            {
-                category: "Other",
-                amount: 100,
-                color: "#00ffff",
-                id: 4
-            }
-        ]
-
-        this.budgetList = [
-            {
+        this.expenseList = {
+            Food: {
                 category: "Food",
                 amount: 1000,
                 color: "#ff0000"
             },
-            {
+            Other: {
                 category: "Other",
                 amount: 100,
                 color: "#00ff00"
             }
-        ]
+        }
+
+        this.budgetList = {
+            Food: {
+                category: "Food",
+                amount: 1000,
+                color: "#ff0000"
+            },
+            Other: {
+                category: "Other",
+                amount: 100,
+                color: "#00ff00"
+            }
+        }
         //this.budgetData = this.#setBudgetData()
         this.generateSummaryCharts()
         this.setUpExpense()
@@ -76,49 +56,131 @@ export class BudgetTracker {
     }
 
     setUpExpense() {
+
+        for (const key in this.expenseList) {
+            if (Object.hasOwnProperty.call(this.expenseList, key)) {
+                const object = this.expenseList[key];
+                this.createExpenseListing(object)
+            }
+        }
+    }
+
+    createExpenseListing(expense) {
         const expenseContainer = document.getElementById('expenseList')
-        this.expenseList.forEach(element => {
             const tableRow = document.createElement('tr')
-            tableRow.setAttribute('id', `expense-item-${element.id}`)
-            tableRow.style.backgroundColor = element.color
+            tableRow.setAttribute('id', `expense-item-${expense.category}`)
+            tableRow.style.backgroundColor = expense.color
             const tableDataCategory = document.createElement('td')
-            tableDataCategory.textContent = element.category
+            tableDataCategory.textContent = expense.category
             const tableDataAmount = document.createElement('td')
-            tableDataAmount.textContent = element.amount
+            tableDataAmount.textContent = expense.amount
             const TableDataDelete = document.createElement('td')
             const deleteButton = document.createElement('button')
             deleteButton.textContent = 'Delete'
             deleteButton.classList.add('btn', 'btn-danger', 'btn-sm', 'me2')
             deleteButton.addEventListener('click', () => {
-                this.deleteExpense(element)
-            }
+                this.deleteExpense(expense.category)
+                console.log('delete expense')
+            }, { once: true}
             )
             TableDataDelete.appendChild(deleteButton)
             tableRow.appendChild(tableDataCategory)
             tableRow.appendChild(tableDataAmount)
             tableRow.appendChild(TableDataDelete)
             expenseContainer.appendChild(tableRow)
-        })
 
-        const addCategoryExpenseButton = document.getElementById('addCategoryExpenseButton')
+        const addCategoryExpenseButton = document.getElementById('expenseModalAddCategoryButton')
         addCategoryExpenseButton.addEventListener('click', () => {
             document.getElementById('categoryExpenseField').classList.remove('d-none')
         })
 
-        const addExpenseButton = document.getElementById('addExpenseButton')
-        addExpenseButton.addEventListener('click', () => {
+        const addExpenseButton = document.getElementById('addExpenseForm')
+        addExpenseButton.addEventListener('submit', (event) => {
+            event.preventDefault()
             this.addExpense()
-        })
+            console.log('add expense')
+        }, { once: true})
     }
 
     deleteExpense(expense) {
-        delete this.expenseList[expense.id]
-        const expenseItem = document.getElementById(`expense-item-${expense.id}`)
+        
+        delete this.expenseList[expense]
+
+        const expenseItem = document.getElementById(`expense-item-${expense}`)
         expenseItem.remove()
 
         console.log(this.expenseList)
     }
 
+    addExpense() {
+        const expenseModalForm = document.getElementById('addExpenseForm')
+        const amount = document.getElementById('expenseModalAmountInput').value
+        const category = document.getElementById('expenseModalCategoryInput').value
+
+        console.log(typeof amount)
+        if (category in this.expenseList) {
+            this.expenseList[category].amount += parseInt(amount)
+        } else {
+            this.expenseList[category] = {
+                category: category,
+                amount: parseInt(amount),
+                color: "#ff0000"
+            }
+        }
+
+        this.#updateListings()
+    }
+
+
+    setUpBudget() {
+
+        for (const key in this.budgetList) {
+            if (Object.hasOwnProperty.call(this.budgetList, key)) {
+                const object = this.budgetList[key];
+                this.createBudgetListing(object)
+            }
+        }
+    }
+
+    createBudgetListing(budget) {
+        const budgetContainer = document.getElementById('budgetList')
+        const tableRow = document.createElement('tr')
+        tableRow.setAttribute('id', `budget-item-${budget.category}`)
+        tableRow.style.backgroundColor = budget.color
+        const tableDataCategory = document.createElement('td')
+        tableDataCategory.textContent = budget.category
+        const tableDataAmount = document.createElement('td')
+        tableDataAmount.textContent = budget.amount
+        const TableDataDelete = document.createElement('td')
+        const deleteButton = document.createElement('button')
+        deleteButton.textContent = 'Delete'
+        deleteButton.classList.add('btn', 'btn-danger', 'btn-sm', 'me2')
+        deleteButton.addEventListener('click', () => {
+            this.deleteBudgetCategory(budget)
+        }
+        )
+        TableDataDelete.appendChild(deleteButton)
+        tableRow.appendChild(tableDataCategory)
+        tableRow.appendChild(tableDataAmount)
+        tableRow.appendChild(TableDataDelete)
+        budgetContainer.appendChild(tableRow)
+
+    const addCategoryExpenseButton = document.getElementById('addCategoryExpenseButton')
+    addCategoryExpenseButton.addEventListener('click', () => {
+        document.getElementById('categoryExpenseField').classList.remove('d-none')
+    })
+
+    const addExpenseButton = document.getElementById('addBudgetButton')
+    addExpenseButton.addEventListener('click', () => {
+        this.addExpense()
+    })
+    }
+
+    #updateListings() {
+        const expenseContainer = document.getElementById('expenseList')
+        expenseContainer.innerHTML = ''
+        this.setUpExpense()
+    }
 
 
 }
