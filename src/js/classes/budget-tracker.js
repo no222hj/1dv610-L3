@@ -5,7 +5,7 @@ export class BudgetTracker {
 
     #budgetData
 
-    constructor (budgetData) {
+    constructor(budgetData) {
 
         this.expenseList = {
             Food: {
@@ -55,44 +55,49 @@ export class BudgetTracker {
     }
 
     setUpExpense() {
-
         const addExpenseModalButton = document.getElementById('addExpenseModalButton')
         this.setUpExpenseModal()
         addExpenseModalButton.addEventListener('click', (event) => {
         const expenseModal = new bootstrap.Modal(document.getElementById('addExpenseModal'))
         expenseModal.show()
         })
+        this.setUpExpenseListings()
+    }
 
+    setUpExpenseListings() {
         for (const key in this.expenseList) {
             if (Object.hasOwnProperty.call(this.expenseList, key)) {
                 const object = this.expenseList[key];
                 this.createExpenseListing(object)
+                console.log(object)
             }
         }
     }
 
     createExpenseListing(expense) {
         const expenseContainer = document.getElementById('expenseList')
-            const tableRow = document.createElement('tr')
-            tableRow.setAttribute('id', `expense-item-${expense.category}`)
-            tableRow.style.backgroundColor = expense.color
-            const tableDataCategory = document.createElement('td')
-            tableDataCategory.textContent = expense.category
-            const tableDataAmount = document.createElement('td')
-            tableDataAmount.textContent = expense.amount
-            const TableDataDelete = document.createElement('td')
-            const deleteButton = document.createElement('button')
-            deleteButton.textContent = 'Delete'
-            deleteButton.classList.add('btn', 'btn-danger', 'btn-sm', 'me2')
-            deleteButton.addEventListener('click', () => {
-                this.deleteExpense(expense.category)
-            }, { once: true}
-            )
-            TableDataDelete.appendChild(deleteButton)
-            tableRow.appendChild(tableDataCategory)
-            tableRow.appendChild(tableDataAmount)
-            tableRow.appendChild(TableDataDelete)
-            expenseContainer.appendChild(tableRow)
+        const tableRow = document.createElement('tr')
+        tableRow.setAttribute('id', `expense-item-${expense.category}`)
+        tableRow.style.backgroundColor = expense.color
+        const tableDataCategory = document.createElement('td')
+        tableDataCategory.textContent = expense.category
+        const tableDataAmount = document.createElement('td')
+        tableDataAmount.textContent = expense.amount
+        const TableDataDelete = document.createElement('td')
+        const deleteButton = document.createElement('button')
+        deleteButton.textContent = 'Delete'
+        deleteButton.classList.add('btn', 'btn-danger', 'btn-sm', 'me2')
+
+        deleteButton.addEventListener('click', () => {
+            this.deleteExpense(expense.category)
+        }, { once: true }
+        )
+        
+        TableDataDelete.appendChild(deleteButton)
+        tableRow.appendChild(tableDataCategory)
+        tableRow.appendChild(tableDataAmount)
+        tableRow.appendChild(TableDataDelete)
+        expenseContainer.appendChild(tableRow)
     }
 
     setUpExpenseModal() {
@@ -113,13 +118,13 @@ export class BudgetTracker {
             const amount = document.getElementById('expenseModalAmountInput').value
             const category = document.getElementById('expenseModalCategoryInput').value
             console.log(expenseModal)
-            expenseModal.hide()
+            document.getElementById('closeExpenseModalButton').click()
             this.addExpense(amount, category)
-        }, { once: true})
+        })
     }
 
     deleteExpense(expense) {
-        
+
         delete this.expenseList[expense]
 
         const expenseItem = document.getElementById(`expense-item-${expense}`)
@@ -144,13 +149,19 @@ export class BudgetTracker {
 
 
     setUpBudget() {
+        const addBudgetModalButton = document.getElementById('addBudgetModalButton')
+        this.setUpBudgetModal()
+        addBusgetModalButton.addEventListener('click', (event) => {
+        const BudgetModal = new bootstrap.Modal(document.getElementById('addBudgetModal'))
+        expenseModal.show()
+        })
+        this.setUpExpenseListings()
+    }
 
-        for (const key in this.budgetList) {
-            if (Object.hasOwnProperty.call(this.budgetList, key)) {
-                const object = this.budgetList[key];
-                this.createBudgetListing(object)
-            }
-        }
+    setUpBudgetListings() {
+
+                
+
     }
 
     createBudgetListing(budget) {
@@ -176,22 +187,34 @@ export class BudgetTracker {
         tableRow.appendChild(TableDataDelete)
         budgetContainer.appendChild(tableRow)
 
-    const addCategoryExpenseButton = document.getElementById('addCategoryExpenseButton')
-    addCategoryExpenseButton.addEventListener('click', () => {
-        document.getElementById('categoryExpenseField').classList.remove('d-none')
-    })
+        const addCategoryExpenseButton = document.getElementById('addCategoryExpenseButton')
+        addCategoryExpenseButton.addEventListener('click', () => {
+            document.getElementById('categoryExpenseField').classList.remove('d-none')
+        })
 
-    const addExpenseButton = document.getElementById('addBudgetButton')
-    addExpenseButton.addEventListener('click', () => {
-        this.addExpense()
-    })
+        const addExpenseButton = document.getElementById('addBudgetButton')
+        addExpenseButton.addEventListener('click', () => {
+            this.addExpense()
+        })
     }
 
     #updateListings() {
         const expenseContainer = document.getElementById('expenseList')
         expenseContainer.innerHTML = ''
-        this.setUpExpense()
+        this.setUpExpenseListings()
     }
 
+
+
+setUpExpenses(expenseOrBudget) {
+
+    const addItemModalButton = document.getElementById(`add${expenseOrBudget}ModalButton`)
+    this.setUpExpenseModal()
+    addItemModalButton.addEventListener('click', (event) => {
+        const addItemModal = new bootstrap.Modal(document.getElementById(`add${expenseOrBudget}Modal`))
+        addItemModal.show()
+    })
+    this.setUpExpenseListings()
+}
 
 }
