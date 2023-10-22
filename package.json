@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/no222hj/1dv610-L3#readme",
   "dependencies": {
+    "simpleCharts": "no222hj/1dv610-L2#lab3",
     "node": "^20.7.0"
   }
 }

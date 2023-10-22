@@ -19,21 +19,19 @@
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
             BudgetTracker
-            <form class="justify-content-start" action="">
-                <button class="btn btn-outline-success me2" type="button" data-bs-toggle="modal"
-                    data-bs-target="#addExpenseModal">
-                    Add expense
-                </button>
-            </form>
         </div>
     </nav>
-    <div id="info-container" class="row">
-        <div class="col-sm-6 mb-3 mb-sm-0 ">
+
+    <div class="row">
+        <div class="col-sm-6 mb-3 mb-sm-0">
             <div class="card text-center">
                 <div class="card-header">
                     <h2>Budget</h2>
                 </div>
-                <div class="card-body">
+                <div id="budgetCard" class="card-body">
+                    <div id="budgetSummaryContainer">
+
+                    </div>
                     <table class="table text-center">
                         <thead>
                             <tr>
@@ -51,12 +49,16 @@
                     </button>
                 </div>
             </div>
-
+        </div>
+        <div class="col-sm-6">
             <div class="card text-center">
                 <div class="card-header">
                     <h2>Expenses</h2>
                 </div>
-                <div class="card-body">
+                <div id="expenseCard" class="card-body">
+                    <div id="expenseSummaryContainer">
+
+                    </div>
                     <table class="table text-center">
                         <thead>
                             <tr>
@@ -74,55 +76,94 @@
                     </button>
                 </div>
             </div>
-
-
         </div>
-        <div id="summary-container">
+        <div id="summary-container" class="col-sm-6">
             <div class="card" id="edit-container">
                 lskjdlfjk
             </div>
-            <div class="card" id="pieChartExpenseVersusBudget">
-                dflksdjf
+        </div>
+        <div id="" class="col-sm-6">
+            <div class="card" id="expenseSummaryDoughnutChart">
+                lskjdlfjk
             </div>
         </div>
+    </div>
 
-        <div class="modal fade" id="addExpenseModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Add income</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="addExpenseForm" class="justify-content-">
-                            <div class="mb-3">
-                                <label class="form-label" for="expenseModalAmountInput" minlength="1">Amount:</label>
-                                <input class="form-control" id="expenseModalAmountInput" type="number" required>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label" for="expenseModalCategoryInput">Category:</label>
-                                <input type="text" class="form-control" id="expenseModalCategoryInput" required>
-                                <ul></ul>
-                                <button id="expenseModalAddCategoryButton" class="btn btn-sm btn-outline-success me2"
-                                    type="button">
-                                    Add category
-                                </button>
-                            </div>
-                            <button id="closeExpenseModalButton" type="button" class="btn btn-secondary"
-                                data-bs-dismiss="modal">Close</button>
-                            <button id="addExpenseButton" type="submit" class="btn btn-primary">Add</button>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
+    </div class="row">
 
-                    </div>
+    <div class="card" id="pieChartExpenseVersusBudget">
+        dflksdjf
+    </div>
+    <div class="card" id="expenseSummaryBarChart">
+        dflksdjf
+    </div>
+    </div>
+
+    <div class="modal fade" id="addExpenseModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Add expense</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addExpenseForm" class="justify-content-">
+                        <div class="mb-3">
+                            <label class="form-label" for="expenseModalAmountInput" minlength="1">Amount:</label>
+                            <input class="form-control" id="expenseModalAmountInput" type="number" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="expenseModalCategoryInput">Category:</label>
+                            <input type="text" class="form-control" id="expenseModalCategoryInput" required>
+                            <ul></ul>
+                            <button id="expenseModalAddCategoryButton" class="btn btn-sm btn-outline-success me2"
+                                type="button">
+                                Add category
+                            </button>
+                        </div>
+                        <button id="closeExpenseModalButton" type="button" class="btn btn-secondary"
+                            data-bs-dismiss="modal">Close</button>
+                        <button id="addExpenseButton" type="submit" class="btn btn-primary">Add</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+
                 </div>
             </div>
         </div>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-            crossorigin="anonymous"></script>
+    </div>
+    <div class="modal fade" id="addBudgetModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Add income</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addBudgetForm" class="justify-content-">
+                        <div class="mb-3">
+                            <label class="form-label" for="budgetModalAmountInput" minlength="1">Amount:</label>
+                            <input class="form-control" id="budgetModalAmountInput" type="number" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="budgetModalCategoryInput">Category:</label>
+                            <input type="text" class="form-control" id="budgetModalCategoryInput" required>
+                            <ul></ul>
+                        </div>
+                        <button id="closeBudgetModalButton" type="button" class="btn btn-secondary"
+                            data-bs-dismiss="modal">Close</button>
+                        <button id="addBudgetButton" type="submit" class="btn btn-primary">Add</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
 </body>
 
 </html>
