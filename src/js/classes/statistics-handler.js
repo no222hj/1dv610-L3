@@ -1,43 +1,17 @@
-import { ChartsHandler } from "./charts-handler.js"
+import { ChartsHandler } from "./charts-interface.js"
 
-export class SummaryHandler {
+export class StatisticsHandler {
 
 
-    constructor (expenseList, budgetList) {
+    constructor(expenseList, budgetList) {
         this.expenseList = expenseList
         this.budgetList = budgetList
         this.totalExpense = this.#getTotalExpense()
         this.totalBudget = this.#getTotalBudget()
     }
 
-
-    /*generatePieChartTotalBudgetVsExpense() {
-        const totalBudget = this.#getTotalBudget()
-        const totalExpense = this.#getTotalExpense()
-        const data = {
-            Budget: {category: "Budget",
-            amount: totalBudget,
-            color: "#ff0000"},
-            Expense: {category: "Expense",
-            amount: totalExpense,
-            color: "#00ff00"}
-        }
-        console.log(data)
-        const chartsHandler = new ChartsHandler(data)
-
-        return chartsHandler.getPieChart()
-    }*/
-
-    generateExpenseBarChart() {
-        const data = this.#formatDataForSimpleCharts(this.expenseList)
-        const chartsHandler = new ChartsHandler(data)
-        return chartsHandler.getBarChart()
-    }
-
     generateExpenseDoughnutChart() {
-        const data = this.#formatDataForSimpleCharts(this.expenseList)
-
-        const expenseDoughnut = this.generateDoughnutChart(data)
+        const expenseDoughnut = this.generateDoughnutChart(this.expenseList)
         const middleText = this.totalExpense
         this.setUpChartToScaleParent(expenseDoughnut)
         this.setUpDoughNutMiddleText(expenseDoughnut, middleText)
@@ -46,8 +20,7 @@ export class SummaryHandler {
     }
 
     generateBudgetDoughnutChart() {
-        const data = this.#formatDataForSimpleCharts(this.budgetList)
-        const budgetDoughnut = this.generateDoughnutChart(data)
+        const budgetDoughnut = this.generateDoughnutChart(this.budgetList)
         const middleText = this.totalBudget
         this.setUpChartToScaleParent(budgetDoughnut)
         this.setUpDoughNutMiddleText(budgetDoughnut, middleText)
@@ -76,24 +49,6 @@ export class SummaryHandler {
         doughnutChartText.setAttribute('lengthAdjust', 'spacingAndGlyphs')
         doughnutChartText.textContent = `${middleText} kr`
         doughnutChart.appendChild(doughnutChartText)
-    }
-
-    generateExpenseSummary() {
-        const data = this.#formatDataForSimpleCharts(this.expenseList)
-        const chartsHandler = new ChartsHandler(data)
-
-        return chartsHandler.getBarChart()
-    }
-
-    #formatDataForSimpleCharts(data) {
-        const formatedData = []
-        for (const key in data) {
-            if (Object.hasOwnProperty.call(data, key)) {
-                const object = data[key];
-                formatedData.push({ argument: object.category, value: object.amount, color: object.color })
-            }
-    }
-    return formatedData
     }
 
     #getTotalBudget() {

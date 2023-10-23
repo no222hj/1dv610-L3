@@ -11,7 +11,7 @@ export class ChartsHandler {
     #doughnutChart
 
     constructor (dataSet) {
-        this.#simpleCharts = new SimpleCharts(dataSet)
+        this.#simpleCharts = new SimpleCharts(this.#formatDataForSimpleCharts(dataSet))
         this.#pieChart = this.#simpleCharts.plotPieChart()
         this.#barChart = this.#simpleCharts.plotBarChart()
         this.#doughnutChart = this.#simpleCharts.plotDoughnutChart()
@@ -29,12 +29,15 @@ export class ChartsHandler {
         return this.#doughnutChart
     }
 
-    #formatDataForSimpleCharts(dataSet) {
+    #formatDataForSimpleCharts(data) {
         const formatedData = []
-        dataSet.forEach(element => {
-            formatedData.push({ argument: element.category, value: element.amount, color: element.color })
-        })
-        return formatedData
+        for (const key in data) {
+            if (Object.hasOwnProperty.call(data, key)) {
+                const object = data[key];
+                formatedData.push({ argument: object.category, value: object.amount, color: object.color })
+            }
+    }
+    return formatedData
     }
 
 }
