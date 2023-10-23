@@ -1,6 +1,6 @@
 import { SimpleCharts } from '../../../node_modules/simpleCharts/src/js/simpleCharts/simple-charts.js'
 
-export class ChartsHandler {
+export class ChartsInterface {
 
     #simpleCharts
 

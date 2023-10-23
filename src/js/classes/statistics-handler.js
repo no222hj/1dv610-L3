@@ -1,4 +1,4 @@
-import { ChartsHandler } from "./charts-interface.js"
+import { ChartsInterface } from "./charts-interface.js"
 
 export class StatisticsHandler {
 
@@ -12,26 +12,14 @@ export class StatisticsHandler {
     }
 
     #generateDoughnutChart(list) {
-        const chartsHandler = new ChartsHandler(list)
-        const doughnutChart = chartsHandler.getDougnutChart()
+        const chartsInterface = new ChartsInterface(list)
+        const doughnutChart = chartsInterface.getDougnutChart()
         return doughnutChart
     }
 
     #setUpChartToScaleParent(chart) {
         chart.setAttribute('width', '100%')
         chart.setAttribute('viewBox', '0 0 400 400')
-    }
-
-    #setUpDoughNutMiddleText(doughnutChart, middleText) {
-        const doughnutChartText = document.createElementNS('http://www.w3.org/2000/svg', 'text')
-        doughnutChartText.setAttribute('x', '50%')
-        doughnutChartText.setAttribute('y', '50%')
-        doughnutChartText.setAttribute('text-anchor', 'middle')
-        doughnutChartText.setAttribute('dominant-baseline', 'middle')
-        doughnutChartText.setAttribute('font-size', '25px')
-        doughnutChartText.setAttribute('lengthAdjust', 'spacingAndGlyphs')
-        doughnutChartText.textContent = `${middleText} kr`
-        doughnutChart.appendChild(doughnutChartText)
     }
 
     #getTotalAmount(list) {
@@ -45,4 +33,15 @@ export class StatisticsHandler {
         return totalAmount
     }
 
+    #setUpDoughNutMiddleText(doughnutChart, middleText) {
+        const doughnutChartText = document.createElementNS('http://www.w3.org/2000/svg', 'text')
+        doughnutChartText.setAttribute('x', '50%')
+        doughnutChartText.setAttribute('y', '50%')
+        doughnutChartText.setAttribute('text-anchor', 'middle')
+        doughnutChartText.setAttribute('dominant-baseline', 'middle')
+        doughnutChartText.setAttribute('font-size', '25px')
+        doughnutChartText.setAttribute('lengthAdjust', 'spacingAndGlyphs')
+        doughnutChartText.textContent = `${middleText} kr`
+        doughnutChart.appendChild(doughnutChartText)
+    }
 }

@@ -6,6 +6,8 @@ Chapter 2 in Clean Code, "Meaningful Names", brings up the importance of proper 
 
 #### Examples from this project
 
+In this example the name "setListsToLocalStorage" is intention-revealing and searchable. It's also pronounceable and easy to understand. That is instead of just naming it setLocalStorage as i would have in the past.
+
 ```
     #setListsToLocalStorage() {
         window.localStorage.setItem('expenseList', JSON.stringify(this.expenseList))
@@ -21,10 +23,36 @@ Working on this project i've kept the principles in mind and tried to align my c
 
 #### Examples from this project
 
+The example code show a method that call two other. The method is small and does one thing, considering the abstraction level. There is also only one level of abstraction. The two following methods is of lower abstraction level but still maintain the one level each. One could aruge that #setUpModalCard() should be split up further, and perhaps it should. My thought though is that it's small enough to be readable and dividing further might only decrease the understandability.
+
 ```
-    #setListsToLocalStorage() {
-        window.localStorage.setItem('expenseList', JSON.stringify(this.expenseList))
-        window.localStorage.setItem('budgetList', JSON.stringify(this.budgetList))
+    #setUpModal(cardType) {
+        this.#setUpAddItemButton(cardType)
+        this.#setUpModalCard(cardType)
+    }
+
+    #setUpAddItemButton(cardType) {
+        const addListItemButton = document.getElementById(`${cardType}ModalAddButton`)
+        addListItemButton.addEventListener('click', (event) => {
+            const addItemFormModal = new bootstrap.Modal(document.getElementById(`${cardType}AddModal`))
+            addItemFormModal.show()
+        })
+    }
+
+    #setUpModalCard(cardType) {
+        const modalContainer = document.getElementById(`${cardType}ModalContainer`)
+        const addItemForm = modalContainer.querySelector('.addItemForm')
+        modalContainer.querySelector('.addItemModal').addEventListener('hidden.bs.modal', () => {
+            const addItemForm = modalContainer.querySelector('.addItemForm')
+            addItemForm.reset()
+        })
+        modalContainer.querySelector('.addItemForm').addEventListener('submit', (event) => {
+            event.preventDefault()
+            const inputAmount = addItemForm.querySelector('.modalAmountInput').value
+            const inputCategory = addItemForm.querySelector('.modalCategoryInput').value
+            modalContainer.querySelector('.closeModalButton').click()
+            this.#addListingItem(inputAmount, inputCategory, cardType)
+        })
     }
 ```
 
@@ -50,30 +78,41 @@ The "Vertical Distance" on the other hand is one i'm not as familiar with, even 
 
 #### Examples from this project
 
-In this example i've tried to keep the "Vertical Distance" in mind. The method "generateBudgetDoughnutChart()" calls three other methods which in turn are placed in the same order as they are called. This way the code is easier to read and understand. Note that this in an example where i feel like i got it "right". In other parts of the code, the inplementation of "vertical distance" were not as obvious.
+In this example i've tried to keep the "Vertical Distance" in mind. The method "generateDoughnutCategoryChart(list)" calls four other methods which in turn are placed in the same order as they are called. This way the code is easier to read and understand. Note that this in an example where i feel like i got it "right". In other parts of the code, the inplementation of "vertical distance" were not as obvious.
 
 ```
-    generateBudgetDoughnutChart() {
-        const budgetDoughnut = this.generateDoughnutChart(this.budgetList)
-        const middleText = this.totalBudget
-        this.setUpChartToScaleParent(budgetDoughnut)
-        this.setUpDoughNutMiddleText(budgetDoughnut, middleText)
+    generateDoughnutCategoryChart(list) {
+        const expenseDoughnut = this.#generateDoughnutChart(list)
+        const middleText = this.#getTotalAmount(list)
+        this.#setUpChartToScaleParent(expenseDoughnut)
+        this.#setUpDoughNutMiddleText(expenseDoughnut, middleText)
 
-        return budgetDoughnut
+        return expenseDoughnut
     }
 
-    generateDoughnutChart(data) {
-        const chartsHandler = new ChartsHandler(data)
+    #generateDoughnutChart(list) {
+        const chartsHandler = new ChartsHandler(list)
         const doughnutChart = chartsHandler.getDougnutChart()
         return doughnutChart
     }
 
-    setUpChartToScaleParent(chart) {
+    #setUpChartToScaleParent(chart) {
         chart.setAttribute('width', '100%')
         chart.setAttribute('viewBox', '0 0 400 400')
     }
 
-    setUpDoughNutMiddleText(doughnutChart, middleText) {
+    #getTotalAmount(list) {
+        let totalAmount = 0
+        for (const key in list) {
+            if (Object.hasOwnProperty.call(list, key)) {
+                const element = list[key];
+                totalAmount += element.amount
+            }
+        }
+        return totalAmount
+    }
+
+    #setUpDoughNutMiddleText(doughnutChart, middleText) {
         const doughnutChartText = document.createElementNS('http://www.w3.org/2000/svg', 'text')
         doughnutChartText.setAttribute('x', '50%')
         doughnutChartText.setAttribute('y', '50%')
@@ -88,12 +127,99 @@ In this example i've tried to keep the "Vertical Distance" in mind. The method "
 
 ## Chapter 6: Objects and Data Structures
 
+Chapter 6 was a bit confusing at first, until i realized that "Object" in this context refered to the object in "Object Oriented Programming" and not the type "Object". The principles and terminology are to me new, but the core concepts are, for the most part, not. I have for example never before heard about "The Law of Demeter" but i have very seldom not followed said law. 
 
+#### Examples from this project
+
+The example show code from the class StatisticsHandler. The class do adhere to "The Law of Demeter" even though it imports another class, since the class is instantiated and used in the same method. The class implementation is also hidden behind abstraction and use of private methods. 
+
+```
+import { ChartsInterface } from "./charts-interface.js"
+
+export class StatisticsHandler {
+
+    generateDoughnutCategoryChart(list) {
+        const expenseDoughnut = this.#generateDoughnutChart(list)
+        const middleText = this.#getTotalAmount(list)
+        this.#setUpChartToScaleParent(expenseDoughnut)
+        this.#setUpDoughNutMiddleText(expenseDoughnut, middleText)
+
+        return expenseDoughnut
+    }
+
+    #generateDoughnutChart(list) {
+        const chartsInterface = new ChartsInterface(list)
+        const doughnutChart = chartsInterface.getDougnutChart()
+        return doughnutChart
+    }
+
+    #setUpChartToScaleParent(chart) {
+        chart.setAttribute('width', '100%')
+        chart.setAttribute('viewBox', '0 0 400 400')
+    }
+
+    #getTotalAmount(list) {
+        let totalAmount = 0
+        for (const key in list) {
+            if (Object.hasOwnProperty.call(list, key)) {
+                const element = list[key];
+                totalAmount += element.amount
+            }
+        }
+        return totalAmount
+    }
+
+    #setUpDoughNutMiddleText(doughnutChart, middleText) {
+        const doughnutChartText = document.createElementNS('http://www.w3.org/2000/svg', 'text')
+        doughnutChartText.setAttribute('x', '50%')
+        doughnutChartText.setAttribute('y', '50%')
+        doughnutChartText.setAttribute('text-anchor', 'middle')
+        doughnutChartText.setAttribute('dominant-baseline', 'middle')
+        doughnutChartText.setAttribute('font-size', '25px')
+        doughnutChartText.setAttribute('lengthAdjust', 'spacingAndGlyphs')
+        doughnutChartText.textContent = `${middleText} kr`
+        doughnutChart.appendChild(doughnutChartText)
+    }
+}
+```
 
 ## Chapter 7: Error Handling
 
 Keeping error handling manageable has allways been a challenge for me. It's very easy to get lost in error handling and end up with a tangly mess of code. I have worked with several of the principles in this chapter in mind, altough i do believe i already did that prior to some extent. To provide "Context with exceptions" is a must and do save a whole lot of trouble in the long run. The same goes for "Use Exceptions Rather Than Return Codes" and "Write Your Try-Catch-Finally Statement First" to name a few.
 Several of the concepts in this chapter feels more applyable to other programming languages than javascript though. "Use Unchecked Exceptions" is an example.
+
+#### Examples from this project
+
+The example show a method with validation as error handling. Exceptions are used and custom error messages to go along for context. The error handling could (and perhaps should) be broken out into a seperate method though.
+
+```
+  #setChartData(chartData) {      
+
+    if (chartData === undefined) {
+      throw new Error("SimpleCharts: no dataset")
+    }
+    if (!Array.isArray(chartData)) {
+        throw new Error("SimpleCharts: dataset formatting error")
+    }
+    if (Object.keys(chartData).length < 2) {
+      throw new Error("SimpleCharts: dataset requires at least two datapoints")
+    }
+
+    chartData.forEach(element => {
+      if (!/^(?!0$)\d+(\.\d+)?$/.test(element.value)) {
+        throw new Error("SimpleCharts: datapoint value required and has to be a positive number")
+      }
+      if (typeof element.argument !== "string") {
+        throw new Error("SimpleCharts: datapoint argument required and has to be a string")
+      }
+      if (!/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(element.color)) {
+        throw new Error("SimpleCharts: datapoint color required and has to be a string in hex color format")
+      }
+    })
+    this.#setPercentage(chartData)
+    this.chartData = chartData
+  }
+```
 
 ## Chapter 8: Boundaries
 
@@ -162,15 +288,77 @@ To keep classes "Small" and "Single Responsibility" is a question of balance in 
 
 #### Examples from this project
 
-The
+The example code show a class from the project used as an bridge between two other classes. I have tried to keep it small and with one responsibility. The cohesion could be viewed upon as high. Of course though it could be smaller, split up further and the cohesion could be even higher. The "main" class however is far bigger, with higher cohesion and more responsibilities. 
 
 ```
-    #setListsToLocalStorage() {
-        window.localStorage.setItem('expenseList', JSON.stringify(this.expenseList))
-        window.localStorage.setItem('budgetList', JSON.stringify(this.budgetList))
+import { ChartsHandler } from "./charts-interface.js"
+
+export class StatisticsHandler {
+
+    generateDoughnutCategoryChart(list) {
+        const expenseDoughnut = this.#generateDoughnutChart(list)
+        const middleText = this.#getTotalAmount(list)
+        this.#setUpChartToScaleParent(expenseDoughnut)
+        this.#setUpDoughNutMiddleText(expenseDoughnut, middleText)
+
+        return expenseDoughnut
     }
+
+    #generateDoughnutChart(list) {
+        const chartsHandler = new ChartsHandler(list)
+        const doughnutChart = chartsHandler.getDougnutChart()
+        return doughnutChart
+    }
+
+    #setUpChartToScaleParent(chart) {
+        chart.setAttribute('width', '100%')
+        chart.setAttribute('viewBox', '0 0 400 400')
+    }
+
+    #setUpDoughNutMiddleText(doughnutChart, middleText) {
+        const doughnutChartText = document.createElementNS('http://www.w3.org/2000/svg', 'text')
+        doughnutChartText.setAttribute('x', '50%')
+        doughnutChartText.setAttribute('y', '50%')
+        doughnutChartText.setAttribute('text-anchor', 'middle')
+        doughnutChartText.setAttribute('dominant-baseline', 'middle')
+        doughnutChartText.setAttribute('font-size', '25px')
+        doughnutChartText.setAttribute('lengthAdjust', 'spacingAndGlyphs')
+        doughnutChartText.textContent = `${middleText} kr`
+        doughnutChart.appendChild(doughnutChartText)
+    }
+
+    #getTotalAmount(list) {
+        let totalAmount = 0
+        for (const key in list) {
+            if (Object.hasOwnProperty.call(list, key)) {
+                const element = list[key];
+                totalAmount += element.amount
+            }
+        }
+        return totalAmount
+    }
+
+}
 ```
 
 ## Chapter 11: Systems
 
 Just like chapter 9, the principles in this one is harder to grasp. This might have to do with the fact that there is no lecture rearding this, and many of the terms are Java-related (a language im not as comfortable with as Javascript). Architecure is also somthing i personally find hard to work with and often end upp with a poorly structured one, when scaling up a project. 
+
+#### Examples from this project
+
+The example is from the class BudgetTracker and show how the Class StatisticsHandler is instantiated already in the constructor, to later be used at runtime. This can be viewed as an example of not using "Lazy Initialization" discussed in "Separate Constructing a System from Using It". 
+
+```
+    constructor() {
+
+        this.#expenseList = this.#retrieveFromLocalStorage('expenseList')
+        this.#budgetList = this.#retrieveFromLocalStorage('budgetList')
+        this.#statisticsHandler = new StatisticsHandler()
+
+        this.#setUpExpenseCard()
+        this.#setUpBudgetCard()
+        this.#generateSummaryCharts()
+        this.#setUpBalanceCard()
+    }
+```

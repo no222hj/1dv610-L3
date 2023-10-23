@@ -28,7 +28,7 @@ export class BudgetTracker {
         return this.#budgetList
     }
 
-    #getList(listType) {
+    #getTypeOfList(listType) {
         if (listType === 'expense') {
             return this.#expenseList
         } else if (listType === 'budget') {
@@ -84,7 +84,7 @@ export class BudgetTracker {
 
 
     #setUpList(cardType) {
-        const listObject = this.#getList(cardType)
+        const listObject = this.#getTypeOfList(cardType)
         const listContainer = document.getElementById(`${cardType}List`)
 
         for (const key in listObject) {
@@ -123,7 +123,7 @@ export class BudgetTracker {
     }
 
     #addListingItem(amount, category, listType) {
-        const list = this.#getList(listType)
+        const list = this.#getTypeOfList(listType)
 
         if (category in list) {
             list[category].amount += parseInt(amount)
@@ -131,7 +131,7 @@ export class BudgetTracker {
             list[category] = {
                 category: category,
                 amount: parseInt(amount),
-                color: this.setCategoryColor(category)
+                color: this.#setCategoryColor(category)
             }
         }
 
@@ -139,31 +139,23 @@ export class BudgetTracker {
     }
 
     #deleteListing(category, cardType) {
-        const listToRemoveFrom = this.#getList(cardType)
+        const listToRemoveFrom = this.#getTypeOfList(cardType)
         delete listToRemoveFrom[category]
 
         this.#updateListings()
     }
 
-    setCategoryColor(category) {
+    #setCategoryColor(category) {
         if (category in this.#expenseList) {
             return this.#expenseList[category].color
         } else if (category in this.#budgetList) {
             return this.#budgetList[category].color
         } else {
-            return this.generateRandomColorFromPallete()
+            return this.#generateRandomColor()
         }
     }
 
-    generateRandomColorFromPallete() {
-        const colors = [
-            '#219C90', '#1F9E87', '#1C9F7F', '#1AA177', '#17926F',
-            '#148367', '#11745F', '#0E7557', '#0B7650', '#087748',
-            '#E9B824', '#E9B128', '#EAAF2C', '#EAA830', '#EAAB34',
-            '#EE9322', '#EE8E26', '#EE892A', '#EE8330', '#EE7D34',
-            '#D83F31', '#D83B35', '#D73739', '#D7333D', '#D72F41'
-        ]
-
+    #generateRandomColor() {
         let color = '#';
         while (color.length < 7 || color === '#000000') {
             color = '#' + Math.floor(Math.random() * 16777215).toString(16);
@@ -230,7 +222,6 @@ export class BudgetTracker {
     }
 
     #setUpBalanceCard () {
-        
         const balance = this.#calculateBalance()
         const balanceNumber = document.getElementById('balanceCard')
 
