@@ -2,7 +2,7 @@ import { StatisticsHandler } from "./statistics-handler.js"
 
 export class BudgetTracker {
 
-    #expenseList 
+    #expenseList
 
     #budgetList
 
@@ -10,14 +10,14 @@ export class BudgetTracker {
 
     constructor() {
 
-        this.#expenseList = this.retrieveFromLocalStorage('expenseList')
-        this.#budgetList = this.retrieveFromLocalStorage('budgetList')
+        this.#expenseList = this.#retrieveFromLocalStorage('expenseList')
+        this.#budgetList = this.#retrieveFromLocalStorage('budgetList')
         this.#statisticsHandler = new StatisticsHandler()
 
-        this.generateSummaryCharts()
-
-        this.setUpExpenseCard()
-        this.setUpBudgetCard()
+        this.#setUpExpenseCard()
+        this.#setUpBudgetCard()
+        this.#generateSummaryCharts()
+        this.#setUpBalanceCard()
     }
 
     getExpenseList() {
@@ -38,51 +38,16 @@ export class BudgetTracker {
         }
     }
 
-    retrieveFromLocalStorage(key) {
+    #retrieveFromLocalStorage(key) {
         return window.localStorage.getItem(`${key}`) ? JSON.parse(window.localStorage.getItem(`${key}`)) : {}
     }
 
-    generateSummaryCharts() {
-
-        const expenseDoughnut = this.setUpExpenseSummary(this.getExpenseList())
-        document.getElementById('expenseSummaryContainer').prepend(expenseDoughnut)
-
-        const budgetDoughnut = this.setUpBudgetSummary(this.getBudgetList())
-        document.getElementById('budgetSummaryContainer').prepend(budgetDoughnut)
-    }
-
-    setUpExpenseSummary() {
-        try {
-            return this.statisticsHandler.generateExpenseDoughnutChart()
-        } catch (error) {
-            if (error.message === 'SimpleCharts: dataset requires at least two datapoints') {
-                const element = document.createElement('p')
-                element.classList.add('text-muted')
-                element.textContent = 'Add two or more expenses to see a summary'
-                return element
-            }
-        }
-    }
-
-    setUpBudgetSummary() {
-        try {
-            return this.statisticsHandler.generateBudgetDoughnutChart()
-        } catch (error) {
-            if (error.message === 'SimpleCharts: dataset requires at least two datapoints') {
-                const element = document.createElement('p')
-                element.classList.add('text-muted')
-                element.textContent = 'Add two or more budget items to see a summary'
-                return element
-            }
-        }
-    }
-
-    setUpExpenseCard() {
+    #setUpExpenseCard() {
         this.#setUpModal('expense')
         this.#setUpList('expense')
     }
 
-    setUpBudgetCard() {
+    #setUpBudgetCard() {
         this.#setUpModal('budget')
         this.#setUpList('budget')
     }
@@ -113,10 +78,10 @@ export class BudgetTracker {
             const inputAmount = addItemForm.querySelector('.modalAmountInput').value
             const inputCategory = addItemForm.querySelector('.modalCategoryInput').value
             modalContainer.querySelector('.closeModalButton').click()
-            this.addListingItem(inputAmount, inputCategory, cardType)
+            this.#addListingItem(inputAmount, inputCategory, cardType)
         })
     }
-    
+
 
     #setUpList(cardType) {
         const listObject = this.#getList(cardType)
@@ -125,12 +90,12 @@ export class BudgetTracker {
         for (const key in listObject) {
             if (Object.hasOwnProperty.call(listObject, key)) {
                 const listItem = listObject[key];
-                listContainer.appendChild(this.createListElement(listItem, cardType))
+                listContainer.appendChild(this.#createListElement(listItem, cardType))
             }
         }
     }
 
-    createListElement(listItem, cardType) {
+    #createListElement(listItem, cardType) {
         const tableRow = document.createElement('tr')
         tableRow.setAttribute('id', `${cardType}-item-${listItem.category}`)
         tableRow.style.backgroundColor = listItem.color
@@ -157,7 +122,7 @@ export class BudgetTracker {
         return tableRow
     }
 
-    addListingItem(amount, category, listType) {
+    #addListingItem(amount, category, listType) {
         const list = this.#getList(listType)
 
         if (category in list) {
@@ -181,10 +146,10 @@ export class BudgetTracker {
     }
 
     setCategoryColor(category) {
-        if (category in this.expenseList) {
-            return this.expenseList[category].color
-        } else if (category in this.budgetList) {
-            return this.budgetList[category].color
+        if (category in this.#expenseList) {
+            return this.#expenseList[category].color
+        } else if (category in this.#budgetList) {
+            return this.#budgetList[category].color
         } else {
             return this.generateRandomColorFromPallete()
         }
@@ -210,15 +175,16 @@ export class BudgetTracker {
         this.#setListsToLocalStorage()
         this.#clearListingCard('expense')
         this.#clearListingCard('budget')
+        this.#clearBalanceCard()
         this.#setUpList('expense')
         this.#setUpList('budget')
-        this.generateSummaryCharts()
+        this.#setUpBalanceCard()
+        this.#generateSummaryCharts()
     }
-    
 
     #setListsToLocalStorage() {
-        window.localStorage.setItem('expenseList', JSON.stringify(this.expenseList))
-        window.localStorage.setItem('budgetList', JSON.stringify(this.budgetList))
+        window.localStorage.setItem('expenseList', JSON.stringify(this.#expenseList))
+        window.localStorage.setItem('budgetList', JSON.stringify(this.#budgetList))
     }
 
     #clearListingCard(cardType) {
@@ -228,4 +194,73 @@ export class BudgetTracker {
         expenseSummaryContainer.innerHTML = ''
     }
 
+    #generateSummaryCharts() {
+
+        const expenseDoughnut = this.#setUpSummaryChart(this.getExpenseList())
+        document.getElementById('expenseSummaryContainer').prepend(expenseDoughnut)
+
+        const budgetDoughnut = this.#setUpSummaryChart(this.getBudgetList())
+        document.getElementById('budgetSummaryContainer').prepend(budgetDoughnut)
+    }
+
+    #setUpSummaryChart(list) {
+        try {
+            return this.#statisticsHandler.generateDoughnutCategoryChart(list)
+        } catch (error) {
+            if (error.message === 'SimpleCharts: dataset requires at least two datapoints') {
+                const element = document.createElement('p')
+                element.classList.add('text-muted')
+                element.textContent = 'Add two or more items to see a summary'
+                return element
+            }
+        }
+    }
+
+    setUpBudgetSummary() {
+        try {
+            return this.statisticsHandler.generateBudgetDoughnutChart()
+        } catch (error) {
+            if (error.message === 'SimpleCharts: dataset requires at least two datapoints') {
+                const element = document.createElement('p')
+                element.classList.add('text-muted')
+                element.textContent = 'Add two or more budget items to see a summary'
+                return element
+            }
+        }
+    }
+
+    #setUpBalanceCard () {
+        
+        const balance = this.#calculateBalance()
+        const balanceNumber = document.getElementById('balanceCard')
+
+        balanceNumber.textContent = `${balance} kr`
+        balanceNumber.className = balance >= 0 ? 'text-success' : 'text-danger'
+        balanceNumber.classList.add('fw-bold')
+        balanceNumber.classList.add('fs-1')
+    }
+
+    #clearBalanceCard () {
+        const balanceNumber = document.getElementById('balanceCard')
+        balanceNumber.textContent = ''
+        balanceNumber.className = ''
+    }
+
+    #calculateBalance () {
+        let balance = 0
+        for (const key in this.#expenseList) {
+            if (Object.hasOwnProperty.call(this.#expenseList, key)) {
+                const element = this.#expenseList[key];
+                balance -= element.amount
+            }
+        }
+        for (const key in this.#budgetList) {
+            if (Object.hasOwnProperty.call(this.#budgetList, key)) {
+                const element = this.#budgetList[key];
+                balance += element.amount
+            }
+        }
+
+        return balance
+    }
 }

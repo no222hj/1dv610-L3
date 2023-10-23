@@ -22,6 +22,17 @@
         </div>
     </nav>
 
+    <div class="mx-auto col-sm-6 mb-3 mb-sm-0">
+        <div class="card text-center">
+            <div class="card-header">
+                <h2>Balance</h2>
+            </div>
+            <div id="" class="card-body">
+                <div id="balanceCard">
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="col-sm-6 mb-3 mb-sm-0">
             <div class="card text-center">
@@ -44,7 +55,7 @@
                         </tbody>
                     </table>
                     </ul>
-                    <button id="addBudgetModalButton" class="btn btn-outline-success me2" type="button">
+                    <button id="budgetModalAddButton" class="btn btn-outline-success me2" type="button">
                         Add Budget
                     </button>
                 </div>
@@ -71,35 +82,17 @@
                         </tbody>
                     </table>
                     </ul>
-                    <button id="addExpenseModalButton" class="btn btn-outline-success me2" type="button">
+                    <button id="expenseModalAddButton" class="btn btn-outline-success me2" type="button">
                         Add expense
                     </button>
                 </div>
             </div>
         </div>
-        <div id="summary-container" class="col-sm-6">
-            <div class="card" id="edit-container">
-                lskjdlfjk
-            </div>
-        </div>
-        <div id="" class="col-sm-6">
-            <div class="card" id="expenseSummaryDoughnutChart">
-                lskjdlfjk
-            </div>
-        </div>
     </div>
-
     </div class="row">
-
-    <div class="card" id="pieChartExpenseVersusBudget">
-        dflksdjf
-    </div>
-    <div class="card" id="expenseSummaryBarChart">
-        dflksdjf
-    </div>
     </div>
     <div id="expenseModalContainer">
-    <div class="modal fade addItemModal" id="addExpenseModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade addItemModal" id="expenseAddModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -134,7 +127,7 @@
     </div>
     </div>
     <div id="budgetModalContainer">
-    <div class="modal fade addItemModal" id="addBudgetModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade addItemModal" id="budgetAddModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
