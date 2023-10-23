@@ -98,8 +98,8 @@
         dflksdjf
     </div>
     </div>
-
-    <div class="modal fade" id="addExpenseModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div id="expenseModalContainer">
+    <div class="modal fade addItemModal" id="addExpenseModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -107,21 +107,21 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="addExpenseForm" class="justify-content-">
+                    <form id="addExpenseForm" class="addItemForm">
                         <div class="mb-3">
                             <label class="form-label" for="expenseModalAmountInput" minlength="1">Amount:</label>
-                            <input class="form-control" id="expenseModalAmountInput" type="number" required>
+                            <input class="form-control modalAmountInput" id="expenseModalAmountInput" type="number" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label" for="expenseModalCategoryInput">Category:</label>
-                            <input type="text" class="form-control" id="expenseModalCategoryInput" required>
+                            <input type="text" class="form-control modalCategoryInput" id="expenseModalCategoryInput" required>
                             <ul></ul>
                             <button id="expenseModalAddCategoryButton" class="btn btn-sm btn-outline-success me2"
                                 type="button">
                                 Add category
                             </button>
                         </div>
-                        <button id="closeExpenseModalButton" type="button" class="btn btn-secondary"
+                        <button type="button" class="closeModalButton btn btn-secondary"
                             data-bs-dismiss="modal">Close</button>
                         <button id="addExpenseButton" type="submit" class="btn btn-primary">Add</button>
                     </form>
@@ -132,7 +132,9 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="addBudgetModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    </div>
+    <div id="budgetModalContainer">
+    <div class="modal fade addItemModal" id="addBudgetModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -140,17 +142,17 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="addBudgetForm" class="justify-content-">
+                    <form id="addBudgetForm" class="addItemForm">
                         <div class="mb-3">
                             <label class="form-label" for="budgetModalAmountInput" minlength="1">Amount:</label>
-                            <input class="form-control" id="budgetModalAmountInput" type="number" required>
+                            <input class="form-control modalAmountInput" id="budgetModalAmountInput" type="number" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label" for="budgetModalCategoryInput">Category:</label>
-                            <input type="text" class="form-control" id="budgetModalCategoryInput" required>
+                            <input type="text" class="form-control modalCategoryInput" id="budgetModalCategoryInput" required>
                             <ul></ul>
                         </div>
-                        <button id="closeBudgetModalButton" type="button" class="btn btn-secondary"
+                        <button type="button" class="closeModalButton btn btn-secondary"
                             data-bs-dismiss="modal">Close</button>
                         <button id="addBudgetButton" type="submit" class="btn btn-primary">Add</button>
                     </form>
@@ -160,6 +162,7 @@
                 </div>
             </div>
         </div>
+    </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"

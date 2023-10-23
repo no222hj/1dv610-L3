@@ -12,18 +12,8 @@ export class BudgetTracker {
 
         this.generateSummaryCharts()
 
-        this.setUpExpense()
-        this.setUpBudget()
-    }
-
-    #setUpCategories() {
-        this.generateSummary()
-        this.setUpExpense()
-        this.setUpBudget()
-    }
-
-    #setBudgetData() {
-
+        this.setUpExpenseCard()
+        this.setUpBudgetCard()
     }
 
     retrieveFromLocalStorage(key) {
@@ -69,12 +59,10 @@ export class BudgetTracker {
             }
         }
 
-
-
-
-    setUpExpense() {
+    setUpExpenseCard() {
         const addExpenseModalButton = document.getElementById('addExpenseModalButton')
-        this.setUpExpenseModal()
+        const modalContainer = document.getElementById('expenseModalContainer')
+        this.setUpModal(modalContainer)
         addExpenseModalButton.addEventListener('click', (event) => {
         const expenseModal = new bootstrap.Modal(document.getElementById('addExpenseModal'))
         expenseModal.show()
@@ -82,9 +70,10 @@ export class BudgetTracker {
         this.setUpListings(this.expenseList, 'expense')
     }
 
-    setUpBudget() {
+    setUpBudgetCard() {
         const addBudgetModalButton = document.getElementById('addBudgetModalButton')
-        this.setUpBudgetModal()
+        const modalContainer = document.getElementById('budgetModalContainer')
+        this.setUpModal(modalContainer)
         addBudgetModalButton.addEventListener('click', (event) => {
         const budgetModal = new bootstrap.Modal(document.getElementById('addBudgetModal'))
         budgetModal.show()
@@ -96,12 +85,12 @@ export class BudgetTracker {
         for (const key in typeOfList) {
             if (Object.hasOwnProperty.call(typeOfList, key)) {
                 const object = typeOfList[key];
-                this.createListing(object, typeOfListing)
+                this.createListElement(object, typeOfListing)
             }
         }
     }
 
-    createListing(object, typeOfListing) {
+    createListElement(object, typeOfListing) {
         const typeContainer = document.getElementById(`${typeOfListing}List`)
         const tableRow = document.createElement('tr')
         tableRow.setAttribute('id', `${typeOfListing}-item-${object.category}`)
@@ -144,42 +133,22 @@ export class BudgetTracker {
         delete object[key]
     }
 
-    setUpExpenseModal() {
-        const expenseModal = document.getElementById('addExpenseModal')
-        expenseModal.addEventListener('hidden.bs.modal', () => {
-            const form = document.getElementById('addExpenseForm')
-            form.reset()
+    setUpModal(modalContainer, typeOfListing) {
+        const modal = modalContainer.querySelector('.addItemModal')
+        const addItemForm = modalContainer.querySelector('.addItemForm')
+        modal.addEventListener('hidden.bs.modal', () => {
+            addItemForm.reset()
         })
-
-        const addExpenseButton = document.getElementById('addExpenseForm')
-        addExpenseButton.addEventListener('submit', (event) => {
+        addItemForm.addEventListener('submit', (event) => {
             event.preventDefault()
-            const amount = document.getElementById('expenseModalAmountInput').value
-            const category = document.getElementById('expenseModalCategoryInput').value
-            document.getElementById('closeExpenseModalButton').click()
-            this.addExpense(amount, category)
+            const amount = addItemForm.querySelector('.modalAmountInput').value
+            const category = addItemForm.querySelector('.modalCategoryInput').value
+            modal.querySelector('.closeModalButton').click()
+            this.addListingItem(amount, category)
         })
     }
 
-    setUpBudgetModal() {
-        const budgetModal = document.getElementById('addBudgetModal')
-        budgetModal.addEventListener('hidden.bs.modal', () => {
-            const form = document.getElementById('addBudgetForm')
-            form.reset()
-        })
-
-        const addBudgetButton = document.getElementById('addBudgetForm')
-        addBudgetButton.addEventListener('submit', (event) => {
-            event.preventDefault()
-            const amount = document.getElementById('budgetModalAmountInput').value
-            const category = document.getElementById('budgetModalCategoryInput').value
-
-            document.getElementById('closeBudgetModalButton').click()
-            this.addBudget(amount, category)
-        })
-    }
-
-    addExpense(amount, category) {
+    addListingItem(amount, category) {
 
         if (category in this.expenseList) {
             this.expenseList[category].amount += parseInt(amount)
@@ -191,19 +160,6 @@ export class BudgetTracker {
             }
         }
 
-        this.#updateListings()
-    }
-
-    addBudget(amount, category) {
-        if (category in this.budgetList) {
-            this.budgetList[category].amount += parseInt(amount)
-        } else {
-            this.budgetList[category] = {
-                category: category,
-                amount: parseInt(amount),
-                color: this.setCategoryColor(category)
-            }
-        }
         this.#updateListings()
     }
 
@@ -234,30 +190,24 @@ export class BudgetTracker {
     }
 
     #updateListings() {
-        window.localStorage.setItem('expenseList', JSON.stringify(this.expenseList))
-        window.localStorage.setItem('budgetList', JSON.stringify(this.budgetList))
-        const expenseContainer = document.getElementById('expenseList')
-        const expenseSummaryContainer = document.getElementById('expenseSummaryContainer')
-        expenseContainer.innerHTML = ''
-        expenseSummaryContainer.innerHTML = ''
+        this.#setListsToLocalStorage()
+        this.#clearListingCard('expense')
+        this.#clearListingCard('budget')
         this.setUpListings(this.expenseList, 'expense')
-        const budgetContainer = document.getElementById('budgetList')
-        const budgetSummaryContainer = document.getElementById('budgetSummaryContainer')
-        budgetContainer.innerHTML = ''
-        budgetSummaryContainer.innerHTML = ''
         this.setUpListings(this.budgetList, 'budget')
         this.generateSummaryCharts()
     }
 
-setUpExpenses(expenseOrBudget) {
+    #setListsToLocalStorage() {
+        window.localStorage.setItem('expenseList', JSON.stringify(this.expenseList))
+        window.localStorage.setItem('budgetList', JSON.stringify(this.budgetList))
+    }
 
-    const addItemModalButton = document.getElementById(`add${expenseOrBudget}ModalButton`)
-    this.setUpExpenseModal()
-    addItemModalButton.addEventListener('click', (event) => {
-        const addItemModal = new bootstrap.Modal(document.getElementById(`add${expenseOrBudget}Modal`))
-        addItemModal.show()
-    })
-    this.setUpListings()
-}
+    #clearListingCard(typeOfListing) {
+        const listingContainer = document.getElementById(`${typeOfListing}List`)
+        const expenseSummaryContainer = document.getElementById(`${typeOfListing}SummaryContainer`)
+        listingContainer.innerHTML = ''
+        expenseSummaryContainer.innerHTML = ''
+    }
 
 }
