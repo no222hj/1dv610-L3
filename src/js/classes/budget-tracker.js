@@ -1,14 +1,18 @@
-import { ChartsHandler } from "./charts-handler.js"
-import { SummaryHandler } from "./summary-handler.js"
+import { StatisticsHandler } from "./statistics-handler.js"
 
 export class BudgetTracker {
 
-    #budgetData
+    #expenseList 
 
-    constructor(budgetData) {
+    #budgetList
 
-        this.expenseList = this.retrieveFromLocalStorage('expenseList')
-        this.budgetList = this.retrieveFromLocalStorage('budgetList')
+    #statisticsHandler
+
+    constructor() {
+
+        this.#expenseList = this.retrieveFromLocalStorage('expenseList')
+        this.#budgetList = this.retrieveFromLocalStorage('budgetList')
+        this.#statisticsHandler = new StatisticsHandler()
 
         this.generateSummaryCharts()
 
@@ -16,26 +20,40 @@ export class BudgetTracker {
         this.setUpBudgetCard()
     }
 
+    getExpenseList() {
+        return this.#expenseList
+    }
+
+    getBudgetList() {
+        return this.#budgetList
+    }
+
+    #getList(listType) {
+        if (listType === 'expense') {
+            return this.#expenseList
+        } else if (listType === 'budget') {
+            return this.#budgetList
+        } else {
+            throw new Error('BudgetTracker: listType must be either "expense" or "budget"')
+        }
+    }
+
     retrieveFromLocalStorage(key) {
         return window.localStorage.getItem(`${key}`) ? JSON.parse(window.localStorage.getItem(`${key}`)) : {}
     }
 
     generateSummaryCharts() {
-        this.summaryHandler = new SummaryHandler(this.expenseList, this.budgetList)
-        //const totalBudgetVsExpensePieChart = summaryHandler.generatePieChartTotalBudgetVsExpense()
-        //console.log(totalBudgetVsExpensePieChart)
-        //document.getElementById('pieChartExpenseVersusBudget').appendChild(totalBudgetVsExpensePieChart)
 
-        const expenseDoughnut = this.setUpExpenseSummary()
+        const expenseDoughnut = this.setUpExpenseSummary(this.getExpenseList())
         document.getElementById('expenseSummaryContainer').prepend(expenseDoughnut)
 
-        const budgetDoughnut = this.setUpBudgetSummary()
+        const budgetDoughnut = this.setUpBudgetSummary(this.getBudgetList())
         document.getElementById('budgetSummaryContainer').prepend(budgetDoughnut)
     }
 
     setUpExpenseSummary() {
         try {
-        return this.summaryHandler.generateExpenseDoughnutChart()
+            return this.statisticsHandler.generateExpenseDoughnutChart()
         } catch (error) {
             if (error.message === 'SimpleCharts: dataset requires at least two datapoints') {
                 const element = document.createElement('p')
@@ -48,117 +66,116 @@ export class BudgetTracker {
 
     setUpBudgetSummary() {
         try {
-            return this.summaryHandler.generateBudgetDoughnutChart()
-            } catch (error) {
-                if (error.message === 'SimpleCharts: dataset requires at least two datapoints') {
-                    const element = document.createElement('p')
-                    element.classList.add('text-muted')
-                    element.textContent = 'Add two or more budget items to see a summary'
-                    return element
-                }
+            return this.statisticsHandler.generateBudgetDoughnutChart()
+        } catch (error) {
+            if (error.message === 'SimpleCharts: dataset requires at least two datapoints') {
+                const element = document.createElement('p')
+                element.classList.add('text-muted')
+                element.textContent = 'Add two or more budget items to see a summary'
+                return element
             }
         }
+    }
 
     setUpExpenseCard() {
-        const addExpenseModalButton = document.getElementById('addExpenseModalButton')
-        const modalContainer = document.getElementById('expenseModalContainer')
-        this.setUpModal(modalContainer)
-        addExpenseModalButton.addEventListener('click', (event) => {
-        const expenseModal = new bootstrap.Modal(document.getElementById('addExpenseModal'))
-        expenseModal.show()
-        })
-        this.setUpListings(this.expenseList, 'expense')
+        this.#setUpModal('expense')
+        this.#setUpList('expense')
     }
 
     setUpBudgetCard() {
-        const addBudgetModalButton = document.getElementById('addBudgetModalButton')
-        const modalContainer = document.getElementById('budgetModalContainer')
-        this.setUpModal(modalContainer)
-        addBudgetModalButton.addEventListener('click', (event) => {
-        const budgetModal = new bootstrap.Modal(document.getElementById('addBudgetModal'))
-        budgetModal.show()
-        })
-        this.setUpListings(this.budgetList, 'budget')
+        this.#setUpModal('budget')
+        this.#setUpList('budget')
     }
 
-    setUpListings(typeOfList, typeOfListing) {
-        for (const key in typeOfList) {
-            if (Object.hasOwnProperty.call(typeOfList, key)) {
-                const object = typeOfList[key];
-                this.createListElement(object, typeOfListing)
+    #setUpModal(cardType) {
+        this.#setUpAddItemButton(cardType)
+        this.#setUpModalCard(cardType)
+    }
+
+    #setUpAddItemButton(cardType) {
+        const addListItemButton = document.getElementById(`${cardType}ModalAddButton`)
+        addListItemButton.addEventListener('click', (event) => {
+            const addItemFormModal = new bootstrap.Modal(document.getElementById(`${cardType}AddModal`))
+            addItemFormModal.show()
+        })
+    }
+
+    #setUpModalCard(cardType) {
+        const modalContainer = document.getElementById(`${cardType}ModalContainer`)
+        console.log(modalContainer)
+        const addItemForm = modalContainer.querySelector('.addItemForm')
+        modalContainer.querySelector('.addItemModal').addEventListener('hidden.bs.modal', () => {
+            const addItemForm = modalContainer.querySelector('.addItemForm')
+            addItemForm.reset()
+        })
+        modalContainer.querySelector('.addItemForm').addEventListener('submit', (event) => {
+            event.preventDefault()
+            const inputAmount = addItemForm.querySelector('.modalAmountInput').value
+            const inputCategory = addItemForm.querySelector('.modalCategoryInput').value
+            modalContainer.querySelector('.closeModalButton').click()
+            this.addListingItem(inputAmount, inputCategory, cardType)
+        })
+    }
+    
+
+    #setUpList(cardType) {
+        const listObject = this.#getList(cardType)
+        const listContainer = document.getElementById(`${cardType}List`)
+
+        for (const key in listObject) {
+            if (Object.hasOwnProperty.call(listObject, key)) {
+                const listItem = listObject[key];
+                listContainer.appendChild(this.createListElement(listItem, cardType))
             }
         }
     }
 
-    createListElement(object, typeOfListing) {
-        const typeContainer = document.getElementById(`${typeOfListing}List`)
+    createListElement(listItem, cardType) {
         const tableRow = document.createElement('tr')
-        tableRow.setAttribute('id', `${typeOfListing}-item-${object.category}`)
-        tableRow.style.backgroundColor = object.color
+        tableRow.setAttribute('id', `${cardType}-item-${listItem.category}`)
+        tableRow.style.backgroundColor = listItem.color
         const tableDataCategory = document.createElement('td')
-        tableDataCategory.style.color = object.color
+        tableDataCategory.style.color = listItem.color
         tableDataCategory.style.fontWeight = 'bold'
-        tableDataCategory.textContent = object.category
+        tableDataCategory.textContent = listItem.category
         const tableDataAmount = document.createElement('td')
-        tableDataAmount.textContent = object.amount
+        tableDataAmount.textContent = listItem.amount
         const TableDataDelete = document.createElement('td')
         const deleteButton = document.createElement('button')
         deleteButton.textContent = 'Delete'
         deleteButton.classList.add('btn', 'btn-danger', 'btn-sm', 'me2')
 
         deleteButton.addEventListener('click', () => {
-            this.deleteListing(object.category, typeOfListing)
+            this.#deleteListing(listItem.category, cardType)
         }, { once: true }
         )
-        
+
         TableDataDelete.appendChild(deleteButton)
         tableRow.appendChild(tableDataCategory)
         tableRow.appendChild(tableDataAmount)
         tableRow.appendChild(TableDataDelete)
-        typeContainer.appendChild(tableRow)
+        return tableRow
     }
 
-    deleteListing(category, typeOfListing) {
-        let listingParentObject = {}
-        if (typeOfListing === 'expense') {
-            listingParentObject = this.expenseList
-        } else if (typeOfListing === 'budget') {
-            listingParentObject = this.budgetList
-        }
-        this.deleteKeyFromObject(category, listingParentObject)
-        this.#updateListings()
-    }
+    addListingItem(amount, category, listType) {
+        const list = this.#getList(listType)
 
-    deleteKeyFromObject(key, object) {
-        delete object[key]
-    }
-
-    setUpModal(modalContainer, typeOfListing) {
-        const modal = modalContainer.querySelector('.addItemModal')
-        const addItemForm = modalContainer.querySelector('.addItemForm')
-        modal.addEventListener('hidden.bs.modal', () => {
-            addItemForm.reset()
-        })
-        addItemForm.addEventListener('submit', (event) => {
-            event.preventDefault()
-            const amount = addItemForm.querySelector('.modalAmountInput').value
-            const category = addItemForm.querySelector('.modalCategoryInput').value
-            modal.querySelector('.closeModalButton').click()
-            this.addListingItem(amount, category)
-        })
-    }
-
-    addListingItem(amount, category) {
-
-        if (category in this.expenseList) {
-            this.expenseList[category].amount += parseInt(amount)
+        if (category in list) {
+            list[category].amount += parseInt(amount)
         } else {
-            this.expenseList[category] = {
+            list[category] = {
                 category: category,
                 amount: parseInt(amount),
                 color: this.setCategoryColor(category)
             }
         }
+
+        this.#updateListings()
+    }
+
+    #deleteListing(category, cardType) {
+        const listToRemoveFrom = this.#getList(cardType)
+        delete listToRemoveFrom[category]
 
         this.#updateListings()
     }
@@ -175,12 +192,12 @@ export class BudgetTracker {
 
     generateRandomColorFromPallete() {
         const colors = [
-            '#219C90', '#1F9E87', '#1C9F7F', '#1AA177', '#17926F', 
+            '#219C90', '#1F9E87', '#1C9F7F', '#1AA177', '#17926F',
             '#148367', '#11745F', '#0E7557', '#0B7650', '#087748',
             '#E9B824', '#E9B128', '#EAAF2C', '#EAA830', '#EAAB34',
             '#EE9322', '#EE8E26', '#EE892A', '#EE8330', '#EE7D34',
             '#D83F31', '#D83B35', '#D73739', '#D7333D', '#D72F41'
-          ]
+        ]
 
         let color = '#';
         while (color.length < 7 || color === '#000000') {
@@ -193,19 +210,20 @@ export class BudgetTracker {
         this.#setListsToLocalStorage()
         this.#clearListingCard('expense')
         this.#clearListingCard('budget')
-        this.setUpListings(this.expenseList, 'expense')
-        this.setUpListings(this.budgetList, 'budget')
+        this.#setUpList('expense')
+        this.#setUpList('budget')
         this.generateSummaryCharts()
     }
+    
 
     #setListsToLocalStorage() {
         window.localStorage.setItem('expenseList', JSON.stringify(this.expenseList))
         window.localStorage.setItem('budgetList', JSON.stringify(this.budgetList))
     }
 
-    #clearListingCard(typeOfListing) {
-        const listingContainer = document.getElementById(`${typeOfListing}List`)
-        const expenseSummaryContainer = document.getElementById(`${typeOfListing}SummaryContainer`)
+    #clearListingCard(cardType) {
+        const listingContainer = document.getElementById(`${cardType}List`)
+        const expenseSummaryContainer = document.getElementById(`${cardType}SummaryContainer`)
         listingContainer.innerHTML = ''
         expenseSummaryContainer.innerHTML = ''
     }
