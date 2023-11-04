@@ -208,19 +208,6 @@ export class BudgetTracker {
         }
     }
 
-    setUpBudgetSummary() {
-        try {
-            return this.statisticsHandler.generateBudgetDoughnutChart()
-        } catch (error) {
-            if (error.message === 'SimpleCharts: dataset requires at least two datapoints') {
-                const element = document.createElement('p')
-                element.classList.add('text-muted')
-                element.textContent = 'Add two or more budget items to see a summary'
-                return element
-            }
-        }
-    }
-
     #setUpBalanceCard () {
         const balance = this.#calculateBalance()
         const balanceNumber = document.getElementById('balanceCard')
@@ -229,6 +216,8 @@ export class BudgetTracker {
         balanceNumber.className = balance >= 0 ? 'text-success' : 'text-danger'
         balanceNumber.classList.add('fw-bold')
         balanceNumber.classList.add('fs-1')
+
+        const doughnut = this.#statisticsHandler.generateBalanceChart(this.getExpenseList(), this.getBudgetList())
     }
 
     #clearBalanceCard () {
