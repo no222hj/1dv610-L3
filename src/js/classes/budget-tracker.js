@@ -193,6 +193,8 @@ export class BudgetTracker {
 
         const budgetDoughnut = this.#setUpSummaryChart(this.getBudgetList())
         document.getElementById('budgetSummaryContainer').prepend(budgetDoughnut)
+
+        console.log(this.#budgetList)
     }
 
     #setUpSummaryChart(list) {
@@ -217,7 +219,23 @@ export class BudgetTracker {
         balanceNumber.classList.add('fw-bold')
         balanceNumber.classList.add('fs-1')
 
-        const doughnut = this.#statisticsHandler.generateBalanceChart(this.getExpenseList(), this.getBudgetList())
+        const balanceList = {}
+
+        balanceList.expense = {
+            category: 'Expense',
+            amount: this.#calculateTotalAmount(this.#expenseList),
+            color: '#DF2E38'   
+        }
+
+        balanceList.budget = {
+            category: 'Budget',
+            amount: this.#calculateTotalAmount(this.#budgetList),
+            color: '#5D9C59'
+        }
+
+        const balanceDoughnut = this.#statisticsHandler.generatePieBalanceChart(balanceList)
+        document.getElementById('balanceCard').appendChild(balanceDoughnut)
+    
     }
 
     #clearBalanceCard () {
@@ -242,5 +260,16 @@ export class BudgetTracker {
         }
 
         return balance
+    }
+
+    #calculateTotalAmount (list) {
+        let totalAmount = 0
+        for (const key in list) {
+            if (Object.hasOwnProperty.call(list, key)) {
+                const element = list[key];
+                totalAmount += element.amount
+            }
+        }
+        return totalAmount
     }
 }
