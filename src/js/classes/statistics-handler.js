@@ -6,8 +6,14 @@ export class StatisticsHandler {
 
         const balancePie = this.#generatePieChart(list)
         this.#setUpChartToScaleParent(balancePie)
-        
+
         return balancePie
+    }
+
+    #generatePieChart(list) {
+        const chartsInterface = new ChartsInterface(list)
+        const pieChart = chartsInterface.getPieChart()
+        return pieChart
     }
 
     generateDoughnutCategoryChart(list) {
@@ -17,12 +23,6 @@ export class StatisticsHandler {
         this.#setUpDoughNutMiddleText(expenseDoughnut, middleText)
 
         return expenseDoughnut
-    }
-
-    #generatePieChart(list) {
-        const chartsInterface = new ChartsInterface(list)
-        const pieChart = chartsInterface.getPieChart()
-        return pieChart
     }
 
     #generateDoughnutChart(list) {

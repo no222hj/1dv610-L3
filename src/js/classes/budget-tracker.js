@@ -216,6 +216,7 @@ export class BudgetTracker {
 
         balanceNumber.textContent = `${balance} kr`
         balanceNumber.className = balance >= 0 ? 'text-success' : 'text-danger'
+        const budgetColor = 
         balanceNumber.classList.add('fw-bold')
         balanceNumber.classList.add('fs-1')
 

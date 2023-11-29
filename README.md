@@ -1,44 +1,56 @@
 # BudgetTracker
 
-A simple budget tracker app.
+A simple way of tracking your budget with colorful charts.
+
+![Alt text](resources\img\overview.png)
 
 # Features
 
 #### Budgeting:
 
-Set or remove different budgets for different categories. The app calculates the total budget and the total budget for each category.
+Easily set up and manage your budget through categories.
 
 #### Expenses:
 
-Add or remove expenses of different categories. The app calculates the total expenses and the total expenses for each category.
+Add and track your expenses via categories.
 
 #### Balance: 
 
-The app calculates the total balance of the budget.
+View your total finance balance.
 
 #### Charts: 
 
-The app displays data in an easy to read way using different charts.
+Visualize your financials through charts. 
 
 # How it works!
 
-BudgetTracker is a tool to keep track of expenses. Expenses and income of different categories can be added and removed. The app calculatest the total expenses and incomes and displays it in a easy to read way. The app also calculates and presents the total balance of the budget.
+BudgetTracker is a tool to keep track of your budget. Budget- and expense categorys can be added and removed. The app calculates the total budget and expense and displays them in a easy to read way. The app also calculates and presents the total balance of the budget. All is presented as hoverable charts. 
+
+All you need to do is add your budget and expenses, and the app will do the rest!
 
 # Usage
 
-- To add a budget, click the "Add budget" button. This bring up a modal in which you can add a amount and category. Click "Add" to save the budget.
+<img
+ src="resources\img\modal.png" alt="image" width="330" height="auto">
+- To add a budget- or expense category, click the "Add budget" or "Add expense" button. This brings up a modal in which you can add a amount and category. Click "Add" to save.
+This will add a category with the amount and generate a color to the corresponding list.
 <br/>
-- Once two or more budgets are added, the app calculates and display the total balance of the budget, along with a hoverable donout chart.
+<img src="resources\img\hover.png" alt="image" width="265" height="auto">
+
+- Once two or more categories are added, the app calculates and display the total, along with a hoverable doughnut chart.
 <br/>
-- To add an expense, click the "Add expense" button. This bring up a modal in which you can add a amount and category. Click "Add" to save the expense.
-<br/>
-- Once two or more expenses are added, the app calculates and display the total expenses, along with a hoverable bar chart.
+- Adding a budget- or expense category that already exists will add the amount to the previous.
 <br/>
 - To close a modal without saving, click the "X" button in the top right corner of the modal, or the "Close button".
 <br/>
 - To remove a budget or expense, click the "Delete" button of the listing you want to remove.
 <br/>
-- Once a budget and a expense are added, the app calculates and display the total balance of the budget, along with a bar chart.
+- Once a budget and a expense are added, the app calculates and display the total balance of the budget, along with a pie chart.
+
+<img src="resources\img\balance.png" alt="image" width="300" height="auto">
+
+<br/>
+
 
 
 # Development
@@ -63,7 +75,7 @@ BudgetTracker is a tool to keep track of expenses. Expenses and income of differ
     npm install
 ```
 
-3. Open index.html in your browser.
+3. Open index.html in your browser for a render.
 
 4. Start developing!
 
