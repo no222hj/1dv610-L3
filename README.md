@@ -2,7 +2,7 @@
 
 A simple way of tracking your budget with colorful charts.
 
-![Alt text](resources\img\overview.png)
+![Alt text](resources\img\app.png)
 
 # Features
 
