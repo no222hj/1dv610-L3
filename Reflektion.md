@@ -78,7 +78,7 @@ Chapter 4 really got me thinking. I've never thought much about comments, nor th
 
 #### Examples from this project
 
-
+Here is an example of a method that i previously most likely would have commented. Or atleast a version of it more in demand of it.
 
 
 
@@ -345,8 +345,12 @@ export class ChartsHandler {
 
 
 Chapter 9 was rather hard to penetrate for me. My experience of testing is limited and unit tests even more so. The chapter is an interesting read but I do believe I need to work further with unit tests in order to fully grasp the concepts.
-As I have worked with manual testing in this project a lot of the principles in this chapter are not applicable. I have tried to keep the test "Clean and Readable" though, and "One Concept per Test" is something I've tried to keep in mind.
+As I have worked with manual testing in this project a lot of the principles in this chapter are not applicable. I have tried to keep the test "Clean and Readable" though, and "One Concept per Test" is something I've tried to keep in mind but i find it hard to know where to draw the line.
 
+#### Examples from this project
+
+The test 2.2.2. "Add expense category modal close" in the test report show one of the manual tests based on a previous. This test only tests one thing and is easy to read and understand. The test is also "Clean" in the sense that it is easy to follow and does not contain any unnecessary code. It almost look too small in a sense but I do believe it's a good example of "One Concept per Test".
+2.2.6. "Add existing expense category amount" is another exmaple of a test that comply with the above in my opinion. It is however a bit bigger and more complex but still easy to read and understand.
 
 ## Chapter 10: Classes
 
